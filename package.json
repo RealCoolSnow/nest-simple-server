@@ -2,9 +2,9 @@
   "name": "nest-simple-server",
   "version": "0.0.1",
   "description": "",
-  "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "author": "CoolSnow(coolsnow2020@gmail.com)",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
