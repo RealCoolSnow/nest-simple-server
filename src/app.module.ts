@@ -4,13 +4,13 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common'
-import { APP_FILTER } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { CatModule } from './cat/cat.module'
-import { HttpExceptionFilter } from './common/filter/exception/http-exception.filter'
 import { AllExceptionFilter } from './common/filter/exception/all-exception.filter'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
+import { RolesGuard } from './common/guard/roles.guard'
 
 @Module({
   imports: [CatModule],
@@ -25,6 +25,10 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware'
     {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

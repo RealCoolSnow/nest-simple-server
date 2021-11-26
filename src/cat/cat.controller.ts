@@ -6,7 +6,9 @@ import {
   Post,
   Param,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common'
+import { Roles } from 'src/common/decorator/roles.decorator'
 import { CatService } from './cat.service'
 import { CreateCatDto } from './dto/create-cat.dto'
 import { CatValidationPipe } from './pipe/cat-validation.pipe'
@@ -22,9 +24,10 @@ export class CatController {
   }
 
   @Get()
+  @Roles('admin')
   async findAll() {
-    throw new BadGatewayException()
-    //return this.catService.findAll()
+    // throw new BadGatewayException()
+    return this.catService.findAll()
   }
 
   @Get(':id')
