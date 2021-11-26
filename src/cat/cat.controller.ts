@@ -6,19 +6,19 @@ import {
   Post,
   Param,
   ParseIntPipe,
-  HttpStatus,
 } from '@nestjs/common'
-import { ValidationPipe } from 'src/common/pipe/validation.pipe'
 import { CatService } from './cat.service'
 import { CreateCatDto } from './dto/create-cat.dto'
+import { CatValidationPipe } from './pipe/cat-validation.pipe'
 
 @Controller('cat')
 export class CatController {
   constructor(private readonly catService: CatService) {}
 
   @Post()
-  async create(@Body() createCatDto: CreateCatDto) {
+  async create(@Body(CatValidationPipe) createCatDto: CreateCatDto) {
     this.catService.create(createCatDto)
+    return 'OK'
   }
 
   @Get()
@@ -29,7 +29,7 @@ export class CatController {
 
   @Get(':id')
   async findOne(
-    @Param('id', ValidationPipe)
+    @Param('id', ParseIntPipe)
     id: number
   ) {
     return `id = ${id}`
