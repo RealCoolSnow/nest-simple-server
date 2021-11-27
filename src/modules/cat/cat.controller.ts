@@ -9,15 +9,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { Roles } from 'src/common/decorator/roles.decorator'
-import { LoggingInterceptor } from 'src/common/interceptor/logging.interceptor'
-import { TransformInterceptor } from 'src/common/interceptor/transform.interceptor'
+import { Roles } from 'src/modules/common/decorator/roles.decorator'
+import { LoggingInterceptor } from 'src/modules/common/interceptor/logging.interceptor'
+import { TransformInterceptor } from 'src/modules/common/interceptor/transform.interceptor'
 import { CatService } from './cat.service'
 import { CreateCatDto } from './dto/create-cat.dto'
 import { CatValidationPipe } from './pipe/cat-validation.pipe'
 
 @Controller('cat')
-@UseInterceptors(LoggingInterceptor, TransformInterceptor)
 export class CatController {
   constructor(private readonly catService: CatService) {}
 
