@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
 export class User {
@@ -11,9 +17,9 @@ export class User {
   @Column('int')
   age: number
 
-  @Column('timestamp')
+  @CreateDateColumn()
   create_time: number
 
-  @Column('timestamp')
+  @UpdateDateColumn()
   update_time: number
 }

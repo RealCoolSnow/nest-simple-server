@@ -14,7 +14,7 @@ import { RolesGuard } from './common/guard/roles.guard'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), UserModule],
+  imports: [TypeOrmModule.forRoot({ autoLoadEntities: true }), UserModule],
   controllers: [AppController],
   providers: [
     AppService,
