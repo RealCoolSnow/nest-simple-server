@@ -11,10 +11,10 @@ import { UserModule } from './user/user.module'
 import { AllExceptionFilter } from './common/filter/exception/all-exception.filter'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
 import { RolesGuard } from './common/guard/roles.guard'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { DatabaseModule } from './database/database.module'
 
 @Module({
-  imports: [TypeOrmModule.forRoot({ autoLoadEntities: true }), UserModule],
+  imports: [DatabaseModule, UserModule],
   controllers: [AppController],
   providers: [
     AppService,
