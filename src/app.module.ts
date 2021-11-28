@@ -7,14 +7,14 @@ import {
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { UserModule } from './user/user.module'
+import { ComponentsModule } from './components/components.module'
 import { AllExceptionFilter } from './common/filter/exception/all-exception.filter'
-import { LoggerMiddleware } from './common/middleware/logger.middleware'
-import { RolesGuard } from './common/guard/roles.guard'
 import { DatabaseModule } from './database/database.module'
+import { RolesGuard } from './common/guard/roles.guard'
+import { LoggerMiddleware } from './common/middleware/logger.middleware'
 
 @Module({
-  imports: [DatabaseModule, UserModule],
+  imports: [DatabaseModule, ComponentsModule],
   controllers: [AppController],
   providers: [
     AppService,
