@@ -1,24 +1,20 @@
-FROM node:14-alpine AS builder
+FROM node:14 AS production
 
-# Create app directory
-WORKDIR /app
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
-# COPY prisma ./prisma/
+WORKDIR /usr/src/app
 
-# Install app dependencies
-RUN yarn install
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn global add @nestjs/cli
+RUN yarn install --production=true
+
+RUN apt-get -q update && apt-get -qy install netcat
 
 COPY . .
 
-RUN yarn run build
+RUN yarn build 
 
-FROM node:14-alpine
-
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
-
-EXPOSE 3000
-CMD [ "yarn", "run", "start:prod" ]
+CMD ["sh", "-c", "yarn start:prod"]
