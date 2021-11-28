@@ -8,7 +8,7 @@ import { validate } from 'class-validator'
 import { plainToClass } from 'class-transformer'
 
 @Injectable()
-export class CatValidationPipe implements PipeTransform<any> {
+export class UserValidationPipe implements PipeTransform<any> {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       return value

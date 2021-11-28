@@ -7,14 +7,14 @@ import {
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { CatModule } from './cat/cat.module'
+import { UserModule } from './user/user.module'
 import { AllExceptionFilter } from './common/filter/exception/all-exception.filter'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
 import { RolesGuard } from './common/guard/roles.guard'
-import { LoggingInterceptor } from './common/interceptor/logging.interceptor'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Module({
-  imports: [CatModule],
+  imports: [TypeOrmModule.forRoot(), UserModule],
   controllers: [AppController],
   providers: [
     AppService,
@@ -42,6 +42,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes({ path: 'cat', method: RequestMethod.GET })
+      .forRoutes({ path: 'user', method: RequestMethod.GET })
   }
 }

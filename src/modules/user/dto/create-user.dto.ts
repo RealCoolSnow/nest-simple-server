@@ -1,12 +1,9 @@
 import { IsInt, IsString } from 'class-validator'
 
-export class CreateCatDto {
+export class CreateUserDto {
   @IsString()
   name: string
 
   @IsInt()
   age: number
-
-  @IsString()
-  bread: string
 }
