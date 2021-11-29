@@ -13,9 +13,10 @@ import { DatabaseModule } from './database/database.module'
 import { RolesGuard } from './common/guard/roles.guard'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
 import { ResponseTransformInterceptor } from './common/interceptor/response-transform.interceptor'
+import { AppI18nModule } from './common/app-i18n.module'
 
 @Module({
-  imports: [DatabaseModule, ComponentsModule],
+  imports: [DatabaseModule, AppI18nModule, ComponentsModule],
   controllers: [AppController],
   providers: [
     AppService,
