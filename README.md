@@ -1,5 +1,5 @@
 <p align='center'>
-⚡️A rapid development project based on NestJS and TypeScript, including MySql, I18n, Unified Response, Docker Configuration and more.
+⚡️Rapid development project based on NestJS and TypeScript, including MySql, I18n, Unified Response, Docker Configuration and more.
 </p>
 
 ## Features
