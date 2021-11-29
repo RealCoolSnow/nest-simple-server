@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common'
 import { HttpAdapterHost } from '@nestjs/core'
+import { ErrorCode } from '../../response/error-code'
 
 @Catch()
 export class ResponseExceptionFilter implements ExceptionFilter {
@@ -27,7 +28,7 @@ export class ResponseExceptionFilter implements ExceptionFilter {
         ? exception.message
         : 'Internal Server Error'
     const responseBody = {
-      code: -1,
+      code: ErrorCode.Exception,
       msg,
       data: {
         error: msg,
