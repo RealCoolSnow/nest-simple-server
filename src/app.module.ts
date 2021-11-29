@@ -8,34 +8,29 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ComponentsModule } from './components/components.module'
-import { AllExceptionFilter } from './common/filter/exception/all-exception.filter'
+import { ResponseExceptionFilter } from './common/filter/exception/response-exception.filter'
 import { DatabaseModule } from './database/database.module'
 import { RolesGuard } from './common/guard/roles.guard'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
+import { ResponseTransformInterceptor } from './common/interceptor/response-transform.interceptor'
 
 @Module({
   imports: [DatabaseModule, ComponentsModule],
   controllers: [AppController],
   providers: [
     AppService,
-    /*
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },*/
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionFilter,
+      useClass: ResponseExceptionFilter,
     },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    /*
     {
       provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },*/
+      useClass: ResponseTransformInterceptor,
+    },
   ],
 })
 export class AppModule implements NestModule {

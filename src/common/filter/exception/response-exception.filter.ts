@@ -8,7 +8,7 @@ import {
 import { HttpAdapterHost } from '@nestjs/core'
 
 @Catch()
-export class AllExceptionFilter implements ExceptionFilter {
+export class ResponseExceptionFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
@@ -22,17 +22,19 @@ export class AllExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR
-    const message =
+    const msg =
       exception instanceof HttpException
         ? exception.message
         : 'Internal Server Error'
     const responseBody = {
+      code: -1,
+      msg,
+      data: {
+        error: msg,
+      },
       statusCode: httpStatus,
-      message,
-      timestamp: new Date().toISOString(),
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+      url: httpAdapter.getRequestUrl(ctx.getRequest()),
     }
-
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus)
   }
 }
