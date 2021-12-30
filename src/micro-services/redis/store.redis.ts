@@ -1,6 +1,8 @@
+import { Injectable } from '@nestjs/common'
 import Redis from 'ioredis'
 import { getRedisClusterConfig } from './config.redis'
 
+@Injectable()
 export class StoreRedis {
   private readonly master: Redis.Redis
   private readonly slave: Redis.Redis

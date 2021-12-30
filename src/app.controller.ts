@@ -1,13 +1,15 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Inject } from '@nestjs/common'
 import { AppService } from './app.service'
+import { MicroServiceInjectionToken } from './micro-services/micro-service.provider'
 import { StoreRedis } from './micro-services/redis/store.redis'
 
 @Controller()
 export class AppController {
-  private readonly redis: StoreRedis
-  constructor(private readonly appService: AppService) {
-    this.redis = new StoreRedis()
-  }
+  constructor(
+    private readonly appService: AppService,
+    @Inject(MicroServiceInjectionToken.REDIS_STORE)
+    private readonly redis: StoreRedis
+  ) {}
 
   @Get()
   getHello(): string {

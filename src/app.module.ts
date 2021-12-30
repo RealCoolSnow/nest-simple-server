@@ -2,6 +2,7 @@ import {
   MiddlewareConsumer,
   Module,
   NestModule,
+  Provider,
   RequestMethod,
 } from '@nestjs/common'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
@@ -14,25 +15,26 @@ import { RolesGuard } from './common/guard/roles.guard'
 import { LoggerMiddleware } from './common/middleware/logger.middleware'
 import { ResponseTransformInterceptor } from './common/interceptor/response-transform.interceptor'
 import { AppI18nModule } from './common/app-i18n.module'
+import { MicroServiceProvider } from './micro-services/micro-service.provider'
 
+const CommonProvider: Provider[] = [
+  {
+    provide: APP_FILTER,
+    useClass: ResponseExceptionFilter,
+  },
+  {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },
+  {
+    provide: APP_INTERCEPTOR,
+    useClass: ResponseTransformInterceptor,
+  },
+]
 @Module({
   imports: [DatabaseModule, AppI18nModule, ComponentsModule],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_FILTER,
-      useClass: ResponseExceptionFilter,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseTransformInterceptor,
-    },
-  ],
+  providers: [AppService, ...CommonProvider, ...MicroServiceProvider],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
