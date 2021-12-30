@@ -5,11 +5,24 @@ import {
   WinstonModule,
 } from 'nest-winston'
 import * as winston from 'winston'
-import { Logger } from '@nestjs/common'
+import { Logger, LoggerService } from '@nestjs/common'
+import { isProd } from './utils/env'
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger({
+const getLogger = (): LoggerService => {
+  if (isProd) {
+    return WinstonModule.createLogger({
+      level: 'error',
+      format: winston.format.json(),
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.splat(),
+        }),
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        //new winston.transports.File({ filename: 'combined.log' }),
+      ],
+    })
+  } else {
+    return WinstonModule.createLogger({
       level: 'info',
       format: winston.format.json(),
       transports: [
@@ -20,9 +33,13 @@ async function bootstrap() {
             nestWinstonModuleUtilities.format.nestLike()
           ),
         }),
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
       ],
-    }),
+    })
+  }
+}
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    logger: getLogger(),
   })
   //app.enableCors()
   await app.listen(process.env.PORT || 3000)
