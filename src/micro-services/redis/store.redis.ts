@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import Redis from 'ioredis'
 import { getRedisClusterConfig } from './config.redis'
 
@@ -30,7 +30,7 @@ export class StoreRedis {
   }
 
   private failToConnectRedis(error: Error): Promise<void> {
-    console.error(error)
+    Logger.error(error)
     process.exit(1)
   }
 }

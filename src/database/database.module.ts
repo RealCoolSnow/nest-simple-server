@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Logger, Module } from '@nestjs/common'
 import { Connection, getConnectionOptions } from 'typeorm'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
@@ -17,6 +17,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 })
 export class DatabaseModule {
   constructor(connection: Connection) {
-    if (connection.isConnected) console.log('DB Connected Successfully!')
+    if (connection.isConnected) Logger.log('DB Connected Successfully!')
   }
 }

@@ -15,6 +15,7 @@ export class MessageMQ {
   constructor() {
     const config = getRabbitMQConfig()
     MessageMQ.exchange = config.exchange
+    this.promisedChannel = MessageMQ.connect(config)
   }
 
   async publish(message: IMessage): Promise<void> {

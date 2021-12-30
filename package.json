@@ -33,11 +33,13 @@
     "cross-env": "^7.0.3",
     "ioredis": "^4.28.2",
     "mysql2": "^2.3.3",
+    "nest-winston": "^1.6.2",
     "nestjs-i18n": "^8.1.9",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.41",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
