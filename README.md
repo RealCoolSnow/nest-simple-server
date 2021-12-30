@@ -1,16 +1,21 @@
 <p align='center'>
-⚡️Rapid development project based on NestJS and TypeScript, including MySql, I18n, Unified Response, Docker Configuration and more.
+⚡️Rapid development project based on NestJS and TypeScript, including MySql, I18n, Redis, RabbitMQ, Unified Response, Docker Configuration and more.
 </p>
 
 ## Features
-
+- TypeScript
+  
 - [Nest.js](https://docs.nestjs.com/)
 
 - [SQL (TypeORM)](https://docs.nestjs.com/recipes/sql-typeorm#sql-typeorm)
 
 - [nestjs-i18n](https://github.com/ToonvanStrijp/nestjs-i18n)
 
-- TypeScript
+- [Redis](https://github.com/luin/ioredis)
+
+- [amqplib](https://github.com/amqp-node/amqplib)
+  
+- [RabbitMQ](https://github.com/rabbitmq/rabbitmq-server)
 
 ## Run development
     1. Clone this repository
