@@ -10,10 +10,15 @@ export class AppController {
   }
 
   @Get()
-  async getHello(): Promise<any> {
+  getHello(): string {
+    return this.appService.getHello()
+  }
+
+  @Get('redis')
+  async testRedis(): Promise<any> {
     const key = 'nest-simple-server/run-at'
     this.redis.set(key, `${new Date().valueOf()}`)
-    const at = await this.redis.get(key)
-    return { msg: this.appService.getHello(), at }
+    const value = await this.redis.get(key)
+    return { key, value }
   }
 }
