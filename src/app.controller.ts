@@ -1,7 +1,11 @@
 import { Controller, Get, Inject, Logger } from '@nestjs/common'
 import { AppService } from './app.service'
 import { MicroServiceInjectionToken } from './micro-services/micro-service.provider'
-import { IMessage, MessageMQ } from './micro-services/rabbitmq/message.mq'
+import {
+  IMessage,
+  MessageMQ,
+  QUEUES,
+} from './micro-services/rabbitmq/message.mq'
 import { StoreRedis } from './micro-services/redis/store.redis'
 
 @Controller()
@@ -34,14 +38,14 @@ export class AppController {
       data: { time: `${new Date().valueOf()}` },
     }
     //this.mq.publish(message)
-    this.mq.queue('test.queue', message)
+    this.mq.queue(QUEUES.TEST, message)
     return { queue: message }
   }
 
   @Get('mq-consume')
   async testMQConsume(): Promise<{}> {
-    const messages = await this.mq.consume('test.queue')
+    const messages = await this.mq.consume(QUEUES.TEST)
     Logger.debug(messages)
-    return { consume: messages }
+    return { message:'consume is running' }
   }
 }

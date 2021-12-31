@@ -7,11 +7,14 @@ export class IMessage {
   readonly data: Record<string, string>
 }
 
+export enum QUEUES {
+  TEST = 'test.queue',
+}
+
 @Injectable()
 export class MessageMQ {
   private static exchange: string
   private readonly promisedChannel: Promise<Channel>
-
   constructor() {
     const config = getRabbitMQConfig()
     MessageMQ.exchange = config.exchange
@@ -34,42 +37,35 @@ export class MessageMQ {
 
   async queue(queue: string, message: IMessage): Promise<void> {
     this.promisedChannel.then((channel) => {
-      channel.assertQueue(queue, { durable: false }).then(() => {
-        const data = JSON.stringify(message.data)
-        const result = channel.sendToQueue(queue, Buffer.from(data))
-        const log = `queue ${queue} ${data}: ${result}`
-        if (result) {
-          Logger.debug(log)
-        } else {
-          Logger.error(log)
-        }
-      })
+      const data = JSON.stringify(message.data)
+      const result = channel.sendToQueue(queue, Buffer.from(data))
+      const log = `queue ${queue} ${data}: ${result}`
+      if (result) {
+        Logger.debug(log)
+      } else {
+        Logger.error(log)
+      }
     })
   }
 
   async consume(queue: string): Promise<any> {
     this.promisedChannel
-      .then((channel) => {
+      .then((channel) =>
         channel
-          .assertQueue(queue, { durable: false })
-          .then(() => {
-            channel
-              .consume(
-                queue,
-                (message: ConsumeMessage) => {
-                  Logger.debug(message)
-                  Promise.resolve(message)
-                }
-                // { noAck: true }
-              )
-              .catch((error) => {
-                Promise.reject(error)
-              })
-          })
+          .consume(
+            queue,
+            (message: ConsumeMessage) => {
+              const data = message.content.toString()
+              Logger.debug(data)
+              channel.ack(message)
+              Promise.resolve(data)
+            }
+            // { noAck: true }
+          )
           .catch((error) => {
             Promise.reject(error)
           })
-      })
+      )
       .catch((error) => {
         Promise.reject(error)
       })
@@ -81,6 +77,7 @@ export class MessageMQ {
     return connect(config)
       .then(MessageMQ.createChannel)
       .then(MessageMQ.assertExchange)
+      .then(MessageMQ.assertQueue)
       .catch((err) => {
         Logger.error(err)
         //return MessageMQ.connect(config)
@@ -96,6 +93,13 @@ export class MessageMQ {
     await channel.assertExchange(MessageMQ.exchange, 'topic', {
       durable: true,
     })
+    return channel
+  }
+
+  private static async assertQueue(channel: Channel): Promise<Channel> {
+    for (const key in QUEUES) {
+      await channel.assertQueue(QUEUES[key], { durable: false })
+    }
     return channel
   }
 }
