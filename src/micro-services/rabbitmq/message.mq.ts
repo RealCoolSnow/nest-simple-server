@@ -37,7 +37,12 @@ export class MessageMQ {
       channel.assertQueue(queue, { durable: false }).then(() => {
         const data = JSON.stringify(message.data)
         const result = channel.sendToQueue(queue, Buffer.from(data))
-        Logger.debug(`queue ${queue} ${data}: ${result}`)
+        const log = `queue ${queue} ${data}: ${result}`
+        if (result) {
+          Logger.debug(log)
+        } else {
+          Logger.error(log)
+        }
       })
     })
   }
