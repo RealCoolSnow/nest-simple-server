@@ -25,11 +25,22 @@ export class MessageMQ {
         message.subject,
         Buffer.from(JSON.stringify(message.data))
       )
-      Logger.debug(`publish ${message.subject}: ${result}`)
+      Logger.debug(
+        `publish ${MessageMQ.exchange} ${message.subject}: ${result}`
+      )
       return result
     })
   }
 
+  async queue(queue: string, message: IMessage): Promise<void> {
+    this.promisedChannel.then((channel) => {
+      channel.assertQueue(queue, { durable: false }).then(() => {
+        const data = JSON.stringify(message.data)
+        const result = channel.sendToQueue(queue, Buffer.from(data))
+        Logger.debug(`queue ${queue} ${data}: ${result}`)
+      })
+    })
+  }
   private static async connect(config: RabbitMQConfig): Promise<Channel> {
     Logger.log(
       `connect mq: ${config.username}#${config.password}@${config.hostname}`

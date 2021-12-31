@@ -30,10 +30,11 @@ export class AppController {
   @Get('mq')
   async testMQ(): Promise<{}> {
     const message: IMessage = {
-      subject: 'test',
+      subject: 'test.message',
       data: { time: `${new Date().valueOf()}` },
     }
-    this.mq.publish(message)
+    //this.mq.publish(message)
+    this.mq.queue('test.queue', message)
     return { publish: message }
   }
 }
