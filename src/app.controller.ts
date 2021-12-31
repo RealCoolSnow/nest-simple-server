@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from '@nestjs/common'
+import { Controller, Get, Inject, Logger } from '@nestjs/common'
 import { AppService } from './app.service'
 import { MicroServiceInjectionToken } from './micro-services/micro-service.provider'
 import { IMessage, MessageMQ } from './micro-services/rabbitmq/message.mq'
@@ -35,6 +35,13 @@ export class AppController {
     }
     //this.mq.publish(message)
     this.mq.queue('test.queue', message)
-    return { publish: message }
+    return { queue: message }
+  }
+
+  @Get('mq-consume')
+  async testMQConsume(): Promise<{}> {
+    const messages = await this.mq.consume('test.queue')
+    Logger.debug(messages)
+    return { consume: messages }
   }
 }

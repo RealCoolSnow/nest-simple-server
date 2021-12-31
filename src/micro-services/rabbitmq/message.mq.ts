@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { Channel, connect, Connection } from 'amqplib'
+import { Channel, connect, Connection, ConsumeMessage } from 'amqplib'
 import { getRabbitMQConfig, RabbitMQConfig } from './config.mq'
 
 export class IMessage {
@@ -41,6 +41,34 @@ export class MessageMQ {
       })
     })
   }
+
+  async consume(queue: string): Promise<any> {
+    this.promisedChannel
+      .then((channel) => {
+        channel
+          .assertQueue(queue, { durable: false })
+          .then(() => {
+            channel
+              .consume(
+                queue,
+                (message: ConsumeMessage) => {
+                  Logger.debug(message)
+                  Promise.resolve(message)
+                }
+                // { noAck: true }
+              )
+              .catch((error) => {
+                Promise.reject(error)
+              })
+          })
+          .catch((error) => {
+            Promise.reject(error)
+          })
+      })
+      .catch((error) => {
+        Promise.reject(error)
+      })
+  }
   private static async connect(config: RabbitMQConfig): Promise<Channel> {
     Logger.log(
       `connect mq: ${config.username}#${config.password}@${config.hostname}`
@@ -50,7 +78,8 @@ export class MessageMQ {
       .then(MessageMQ.assertExchange)
       .catch((err) => {
         Logger.error(err)
-        return MessageMQ.connect(config)
+        //return MessageMQ.connect(config)
+        return Promise.reject(err)
       })
   }
 
