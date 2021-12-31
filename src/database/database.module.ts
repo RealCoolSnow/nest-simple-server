@@ -1,6 +1,7 @@
 import { Logger, Module } from '@nestjs/common'
 import { Connection, getConnectionOptions } from 'typeorm'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { isProd } from '../utils/env'
 
 @Module({
   imports: [
@@ -8,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
       useFactory: async () =>
         Object.assign(
           await getConnectionOptions(
-            process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
+            isProd ? 'prod' : 'dev'
           )
         ),
     }),
