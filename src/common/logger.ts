@@ -9,7 +9,7 @@ import { isProd } from '../utils/env'
 export const getLogger = (): LoggerService => {
   if (isProd) {
     return WinstonModule.createLogger({
-      level: 'error',
+      level: 'warn',
       format: winston.format.json(),
       transports: [
         new winston.transports.Console({
@@ -21,7 +21,7 @@ export const getLogger = (): LoggerService => {
     })
   } else {
     return WinstonModule.createLogger({
-      level: 'info',
+      level: 'debug',
       format: winston.format.json(),
       transports: [
         new winston.transports.Console({
