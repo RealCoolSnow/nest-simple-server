@@ -17,7 +17,7 @@
   
 - [RabbitMQ](https://github.com/rabbitmq/rabbitmq-server)
 
-- [Logger-winston](https://github.com/winstonjs/winston)
+- [winston(Logger)](https://github.com/winstonjs/winston)
   
 ## Run development
     1. Clone this repository
