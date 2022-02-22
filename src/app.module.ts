@@ -56,8 +56,8 @@ if (isUseThrottler()) {
     useClass: ThrottlerGuard,
   })
   const _ThrottlerModule = ThrottlerModule.forRoot({
-    ttl: parseInt(process.env.THROTTLER_TTL_DEFAULT),
-    limit: parseInt(process.env.THROTTLER_LIMIT_DEFAULT),
+    ttl: Number(process.env.THROTTLER_TTL_DEFAULT),
+    limit: Number(process.env.THROTTLER_LIMIT_DEFAULT),
     ignoreUserAgents: [/throttler-test/g],
   })
   imports.push(_ThrottlerModule)
