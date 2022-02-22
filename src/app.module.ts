@@ -17,6 +17,8 @@ import { ResponseTransformInterceptor } from './common/interceptor/response-tran
 import { AppI18nModule } from './common/app-i18n.module'
 import { MicroServiceProvider } from './micro-services/micro-service.provider'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { ConfigModule } from '@nestjs/config'
+import { isUseThrottler } from './utils/env'
 
 const CommonProvider: Provider[] = [
   {
@@ -28,23 +30,41 @@ const CommonProvider: Provider[] = [
     useClass: RolesGuard,
   },
   {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard,
-  },
-  {
     provide: APP_INTERCEPTOR,
     useClass: ResponseTransformInterceptor,
   },
 ]
-// 10 requests from the same IP can be made to a single endpoint in 3 seconds.
-const _ThrottlerModule = ThrottlerModule.forRoot({
-  ttl: 3,
-  limit: 10,
-  ignoreUserAgents: [/throttler-test/g],
+
+const _ConfigModule = ConfigModule.forRoot({
+  envFilePath: [
+    '.env',
+    '.env.production',
+    '.env.development.local',
+    '.env.development',
+  ],
 })
 
+const imports: any[] = [
+  _ConfigModule,
+  DatabaseModule,
+  AppI18nModule,
+  ComponentsModule,
+]
+if (isUseThrottler()) {
+  CommonProvider.push({
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard,
+  })
+  const _ThrottlerModule = ThrottlerModule.forRoot({
+    ttl: parseInt(process.env.THROTTLER_TTL_DEFAULT),
+    limit: parseInt(process.env.THROTTLER_LIMIT_DEFAULT),
+    ignoreUserAgents: [/throttler-test/g],
+  })
+  imports.push(_ThrottlerModule)
+}
+
 @Module({
-  imports: [DatabaseModule, AppI18nModule, _ThrottlerModule, ComponentsModule],
+  imports,
   controllers: [AppController],
   providers: [AppService, ...CommonProvider, ...MicroServiceProvider],
 })

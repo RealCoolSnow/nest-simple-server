@@ -30,7 +30,7 @@ export class StoreRedis {
   }
 
   private failToConnectRedis(error: Error): Promise<void> {
-    Logger.error(`failToConnectRedis: ${error}`)
+    Logger.error(`Fail to connect Redis: ${error}`)
     process.exit(1)
   }
 }
