@@ -16,6 +16,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware'
 import { ResponseTransformInterceptor } from './common/interceptor/response-transform.interceptor'
 import { AppI18nModule } from './common/app-i18n.module'
 import { MicroServiceProvider } from './micro-services/micro-service.provider'
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 
 const CommonProvider: Provider[] = [
   {
@@ -27,12 +28,23 @@ const CommonProvider: Provider[] = [
     useClass: RolesGuard,
   },
   {
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard,
+  },
+  {
     provide: APP_INTERCEPTOR,
     useClass: ResponseTransformInterceptor,
   },
 ]
+// 10 requests from the same IP can be made to a single endpoint in 3 seconds.
+const _ThrottlerModule = ThrottlerModule.forRoot({
+  ttl: 3,
+  limit: 10,
+  ignoreUserAgents: [/throttler-test/g],
+})
+
 @Module({
-  imports: [DatabaseModule, AppI18nModule, ComponentsModule],
+  imports: [DatabaseModule, AppI18nModule, _ThrottlerModule, ComponentsModule],
   controllers: [AppController],
   providers: [AppService, ...CommonProvider, ...MicroServiceProvider],
 })
